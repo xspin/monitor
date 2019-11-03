@@ -1,0 +1,130 @@
+<html>
+
+<head>
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+    <!-- Plotly chart will be drawn inside this DIV -->
+    <div id="myDiv"></div>
+    <div id="button"><button onclick="func()">Click<button /></div>
+</body>
+<script>
+    function func() {
+        var update = {
+            'yaxis.range': [0, 1],
+        };
+        Plotly.relayout('myDiv', update)
+    };
+    /* JAVASCRIPT CODE GOES HERE */
+    Plotly.d3.csv("../test.csv", function (err, rows) {
+        // https://plot.ly/javascript/plotlyjs-function-reference
+        function unpack(rows, key) {
+            return rows.map(function (row) {
+                return row[key];
+            });
+        }
+
+        // alert(rows[0]);
+        console.log(rows[rows.length-1]);
+        var trace1 = {
+            type: "line+marker",
+            // mode: "lines",
+            name: 'Data',
+            markersize: 3,
+            x: unpack(rows, 'Date'),
+            y: unpack(rows, 'Data'),
+            line: {
+                color: '#17BECF'
+            },
+            xaxis: 'x',
+            yaxis: 'y'
+        }
+
+        var trace2 = {
+            type: "scatter",
+            // mode: "lines",
+            markersize: 5,
+            name: 'Warn',
+            x: unpack(rows, 'Date'),
+            y: unpack(rows, 'Warn'),
+            line: {
+                color: 'red'
+            },
+            xaxis: 'x',
+            yaxis: 'y'
+        }
+        var trace3 = {
+            type: "scatter",
+            // mode: "lines",
+            // markersize: 5,
+            name: 'Data',
+            x: unpack(rows, 'Date'),
+            y: unpack(rows, 'Warn'),
+            line: {
+                color: 'gray'
+            },
+            xaxis: 'x',
+            yaxis: 'y2',
+            
+        }
+
+        var data = [trace1, trace2, trace3];
+
+        var layout = {
+            height: 600,
+            grid:{
+                rows: 2,
+                columns: 1,
+                subplots: [['xy2'],['xy']],
+                roworder:'top to bottom'
+            },
+            title: 'Time Series of packet loss',
+            xaxis: {
+                // autorange: true,
+                range: ['2019-11-04', rows[rows.length-1]['Date']],
+                // rangeselector: {
+                //     buttons: [{
+                //             count: 1,
+                //             label: '1m',
+                //             step: 'month',
+                //             stepmode: 'backward'
+                //         },
+                //         {
+                //             count: 6,
+                //             label: '6m',
+                //             step: 'month',
+                //             stepmode: 'backward'
+                //         },
+                //         {
+                //             step: 'all'
+                //         }
+                //     ]
+                // },
+                rangeslider: {
+                    // range: ['2019-11-01', '2019-11-08']
+                    color: 'green'
+                },
+                type: 'date',
+                title: 'Date'
+            },
+            yaxis: {
+                // autorange: true,
+                // range: [86.8700008333, 138.870004167],
+                title: 'Packet Loss',
+                type: 'linear'
+            },
+            yaxis2: {
+                title: 'Delay',
+            }
+        };
+
+        Plotly.newPlot('myDiv', data, layout, {
+            // showSendToCloud: true
+            scrollZoom: true
+        });
+    })
+</script>
+
+</html>

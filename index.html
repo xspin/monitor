@@ -1,0 +1,71 @@
+
+<html lang='en'>
+<head>
+<script src="dygraph/dygraph.min.js"></script>
+<link rel="stylesheet" href="dygraph/dygraph.min.css" />
+</head>
+
+<body>
+    <div id="graph" style="width:680px; height:320px; margin:auto; margin-top: 100px;"></div>
+    <div class="panel"><a id="btn" onclick="fuck()">click</a>
+    <button type="button" onclick="refresh()">refresh</button>
+    <button type="button" onclick="refresh_post()">refresh_post</button>
+    <!-- <button type="button" onclick="fuck(false)">DisableSelector</button> -->
+    </div>
+</body>
+
+<script type="text/javascript">
+
+g = new Dygraph( document.getElementById("graph"),
+    "test.csv",
+    {
+        title: 'Graph',
+        ylabel: '丢包率（%）',
+        // rollPeriod: 7,
+        // showRoller: true,
+        // errorBars: true,
+        valueRange: [null, 1],
+        labels: ['Time', 'Data', 'Warn'],
+        drawPoints: true,
+        colors: ['blue', 'red'],
+        series: {
+            Data: {
+                fillGraph: true,
+                strokeWidth: 1,
+            },
+            Warn: {
+                pointSize: 5,
+                strokeWidth: 0,
+            }
+        },
+        legend: 'always',
+        // showRangeSelector: true,
+        // rangeSelectorHeight: 30,
+        rangeSelectorPlotStrokeColor: 'lightgreen',
+        rangeSelectorPlotFillColor: 'lightgray',
+        // rangeSelectorAlpha: 0.2,
+        // animatedZooms: true,
+        // showInRangeSelector: true,
+    }
+);
+g.attrs_.showRangeSelector = true;
+function fuck() {
+    var xrange = g.xAxisRange();
+    alert('xrange:' + xrange);
+    // g.updateOptions({ 
+    // }
+    // );
+}
+function refresh() {
+    g.doZoomXDates_(new Date('2019-11-05'), new Date('2019-11-08'));
+}
+function sleep (time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+sleep(100).then(() => {
+    g.doZoomXDates_(new Date('2019-11-05'), new Date('2019-11-09'));
+    return;
+})
+</script>
+</html>
